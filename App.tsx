@@ -5,9 +5,10 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -24,6 +25,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {runTest} from './db';
+import {runTest2} from './db2';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -58,9 +61,22 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const [result, setResult] = useState('');
+  const [result2, setResult2] = useState('');
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  async function run() {
+    setResult('...');
+    runTest().then(setResult, err => console.error(err));
+  }
+
+  async function run2() {
+    setResult2('...');
+    runTest2().then(setResult2, err => console.error(err));
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -76,20 +92,14 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Test 1">
+            <Button onPress={run} title="Run" />
+            Result: {result}
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
+          <Section title="Test 2">
+            <Button onPress={run2} title="Run" />
+            Result: {result2}
           </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
